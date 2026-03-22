@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useChatStore } from "@/lib/store/chatStore";
@@ -58,9 +59,13 @@ export function ConversationList({ onSelect }: ConversationListProps) {
           </Avatar>
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-foreground truncate">
+              <Link
+                href={`/user/${conv.otherUserId}`}
+                onClick={(e) => e.stopPropagation()}
+                className="text-sm font-medium text-foreground truncate hover:underline"
+              >
                 {conv.otherUserName}
-              </span>
+              </Link>
               <span className="text-[11px] text-muted-foreground shrink-0">
                 {formatRelativeTime(conv.lastMessageAt)}
               </span>

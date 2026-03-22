@@ -75,7 +75,7 @@ export function ChatMain({ conversationId, otherUserId, otherUserName, otherUser
           </Button>
         )}
         <Link
-          href={otherUserId ? `/profile/${otherUserId}` : "#"}
+          href={otherUserId ? `/user/${otherUserId}` : "#"}
           className="flex items-center gap-3 flex-1 min-w-0 hover:opacity-80 transition-opacity"
         >
           <Avatar className="size-10">

@@ -48,7 +48,7 @@ export function InlineChat({ conversation, onBack }: InlineChatProps) {
           <ArrowLeft className="size-4" />
         </Button>
         <Link
-          href={`/profile/${conversation.otherUserId}`}
+          href={`/user/${conversation.otherUserId}`}
           className="flex items-center gap-2 flex-1 min-w-0 hover:opacity-80 transition-opacity"
         >
           <Avatar className="size-7">

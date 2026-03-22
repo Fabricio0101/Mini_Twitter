@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { Search, MessageSquarePlus, Loader2 } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
+import { Search, Users, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
   Sheet,
@@ -13,16 +13,22 @@ import {
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { useAllUsers, useStartConversation } from "@/lib/hooks/useChat";
+import { useAllUsers } from "@/lib/hooks/useChat";
 import { useAuthStore } from "@/lib/store/authStore";
 
 export function UserSearchSheet() {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    const handleTourOpen = () => setOpen(true);
+    window.addEventListener("tour:open-user-search", handleTourOpen);
+    return () => window.removeEventListener("tour:open-user-search", handleTourOpen);
+  }, []);
+
   const router = useRouter();
   const currentUserId = useAuthStore((s) => s.user?.id);
   const { data: users, isLoading } = useAllUsers();
-  const startConversation = useStartConversation();
 
   const filteredUsers = useMemo(() => {
     if (!users) return [];
@@ -36,13 +42,9 @@ export function UserSearchSheet() {
   }, [users, search, currentUserId]);
 
   const handleSelectUser = (userId: number) => {
-    startConversation.mutate(userId, {
-      onSuccess: (data) => {
-        setOpen(false);
-        setSearch("");
-        router.push(`/chat?id=${data.id}`);
-      },
-    });
+    setOpen(false);
+    setSearch("");
+    router.push(`/user/${userId}`);
   };
 
   return (
@@ -53,17 +55,17 @@ export function UserSearchSheet() {
             variant="ghost"
             size="icon"
             className="size-9 text-muted-foreground hover:text-foreground"
-            aria-label="Buscar usuários para conversar"
-            title="Nova conversa"
+            aria-label="Buscar usuários"
+            title="Buscar usuários"
           />
         }
       >
-        <MessageSquarePlus className="size-[18px]" />
+        <Users className="size-[18px]" />
       </SheetTrigger>
-      <SheetContent side="left" className="w-80 sm:w-96 p-0">
+      <SheetContent side="left" className="w-80 sm:w-96 p-0" data-tour="user-search-sheet">
         <SheetHeader className="p-4 pb-2 border-b border-border">
           <SheetTitle className="text-base">Procurar</SheetTitle>
-          <div className="relative mt-2">
+          <div className="relative mt-2" data-tour="user-search-input">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
             <Input
               value={search}
@@ -75,7 +77,7 @@ export function UserSearchSheet() {
           </div>
         </SheetHeader>
 
-        <div className="overflow-y-auto flex-1">
+        <div className="overflow-y-auto flex-1" data-tour="user-search-list">
           {!search.trim() && (
             <p className="px-4 pt-3 pb-1 text-xs font-medium text-muted-foreground uppercase tracking-wider">
               Sugestões
@@ -103,7 +105,6 @@ export function UserSearchSheet() {
               key={user.id}
               variant="ghost"
               onClick={() => handleSelectUser(user.id)}
-              disabled={startConversation.isPending}
               className="flex items-center gap-3 w-full h-auto px-4 py-3 justify-start rounded-none"
             >
               <Avatar className="size-10 shrink-0">

@@ -60,6 +60,7 @@ export function WelcomeModal({ onDismiss }: WelcomeModalProps) {
         <DialogFooter className="px-6 pb-6">
           <Button
             onClick={handleClose}
+            onMouseDown={(e) => e.preventDefault()}
             className="bg-brand hover:bg-brand-hover text-brand-foreground"
           >
             Entendi
