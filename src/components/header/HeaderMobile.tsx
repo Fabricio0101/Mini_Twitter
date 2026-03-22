@@ -61,10 +61,11 @@ export function HeaderMobile() {
           <HelpMenu />
           <ThemeToggle />
           <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-            <SheetTrigger render={
-              <Button variant="ghost" size="icon" className="size-9" aria-label="Menu" />
-            }>
-              <Menu className="size-5 text-foreground" />
+            <SheetTrigger
+              className="inline-flex items-center justify-center size-9 rounded-md text-foreground hover:bg-accent cursor-pointer"
+              aria-label="Menu"
+            >
+              <Menu className="size-5" />
             </SheetTrigger>
             <SheetContent side="right" className="w-72 p-0">
               <SheetTitle className="sr-only">Menu de navegação</SheetTitle>
