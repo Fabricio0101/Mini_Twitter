@@ -2,6 +2,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { LikeButton } from "@/components/posts/LikeButton";
+import { CommentButton } from "@/components/posts/CommentButton";
 import { PostActions } from "@/components/posts/PostActions";
 import { useAuthStore } from "@/lib/store/authStore";
 import type { Post } from "@/lib/types/post";
@@ -64,8 +65,9 @@ export function PostCard({ post }: PostCardProps) {
           </div>
         )}
 
-        <div className="mt-3">
+        <div className="mt-3 flex items-center gap-1">
           <LikeButton postId={post.id} likesCount={post.likesCount} />
+          <CommentButton post={post} />
         </div>
       </CardContent>
     </Card>

@@ -11,6 +11,17 @@ export interface Post {
   authorAvatarUrl: string | null;
   likesCount: number;
   likedByMe: number;
+  commentsCount: number;
+}
+
+export interface Comment {
+  id: number;
+  content: string;
+  postId: number;
+  userId: number;
+  createdAt: string;
+  authorName: string;
+  authorAvatarUrl: string | null;
 }
 
 export interface PostsResponse {
@@ -35,3 +46,8 @@ export interface UpdatePostPayload {
   content: string;
   image?: string;
 }
+
+export interface CreateCommentPayload {
+  content: string;
+}
+

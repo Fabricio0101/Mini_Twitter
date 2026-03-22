@@ -20,6 +20,7 @@ export function LoginForm() {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -31,6 +32,8 @@ export function LoginForm() {
         const axiosError = error as AxiosError<ApiError>;
         if (axiosError.response?.status === 401) {
           toast.error("E-mail ou senha incorretos");
+          setError("email", { message: "E-mail ou senha incorretos" });
+          setError("password", { message: "E-mail ou senha incorretos" });
         } else {
           toast.error("Erro ao fazer login. Tente novamente.");
         }

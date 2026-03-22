@@ -23,6 +23,7 @@ export function RegisterForm() {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
@@ -36,9 +37,8 @@ export function RegisterForm() {
       onError: (error) => {
         const axiosError = error as AxiosError<ApiError>;
         if (axiosError.response?.status === 400) {
-          const message =
-            axiosError.response.data?.message || "E-mail já está em uso";
-          toast.error(message);
+          toast.error("E-mail já está em uso");
+          setError("email", { message: "E-mail já está em uso" });
         } else {
           toast.error("Erro ao criar conta. Tente novamente.");
         }
