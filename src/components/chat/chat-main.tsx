@@ -5,11 +5,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Send, MessageCircle } from "lucide-react";
+import { Send, MessageCircle, ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useMessages, useSendMessage } from "@/lib/hooks/useChat";
 import { useChatStore } from "@/lib/store/chatStore";
 import { useAuthStore } from "@/lib/store/authStore";
+import Link from "next/link";
 
 function formatTime(dateString: string) {
   return new Date(dateString).toLocaleTimeString("pt-BR", {
@@ -20,13 +21,15 @@ function formatTime(dateString: string) {
 
 interface ChatMainProps {
   conversationId: number | null;
+  otherUserId?: number;
   otherUserName?: string;
   otherUserAvatarUrl?: string | null;
+  onBack?: () => void;
 }
 
 const EMPTY_MESSAGES: never[] = [];
 
-export function ChatMain({ conversationId, otherUserName, otherUserAvatarUrl }: ChatMainProps) {
+export function ChatMain({ conversationId, otherUserId, otherUserName, otherUserAvatarUrl, onBack }: ChatMainProps) {
   const [message, setMessage] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const userId = useAuthStore((s) => s.user?.id);
@@ -44,10 +47,11 @@ export function ChatMain({ conversationId, otherUserName, otherUserAvatarUrl }: 
     }
   }, [storeMessages]);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!message.trim() || !conversationId) return;
-    sendMessage(conversationId, message.trim());
+    const content = message.trim();
     setMessage("");
+    await sendMessage(conversationId, content);
   };
 
   if (!conversationId) {
@@ -65,18 +69,27 @@ export function ChatMain({ conversationId, otherUserName, otherUserAvatarUrl }: 
   return (
     <div className="flex-1 flex flex-col min-w-0">
       <div className="flex items-center gap-3 p-4 border-b border-border">
-        <Avatar className="size-10">
-          <AvatarImage src={otherUserAvatarUrl ?? undefined} />
-          <AvatarFallback className="text-xs bg-brand/10 text-brand">
-            {otherUserName?.charAt(0) ?? "?"}
-          </AvatarFallback>
-        </Avatar>
-        <div>
+        {onBack && (
+          <Button variant="ghost" size="icon" className="size-9 md:hidden" onClick={onBack}>
+            <ArrowLeft className="size-4" />
+          </Button>
+        )}
+        <Link
+          href={otherUserId ? `/profile/${otherUserId}` : "#"}
+          className="flex items-center gap-3 flex-1 min-w-0 hover:opacity-80 transition-opacity"
+        >
+          <Avatar className="size-10">
+            <AvatarImage src={otherUserAvatarUrl ?? undefined} />
+            <AvatarFallback className="text-xs bg-brand/10 text-brand">
+              {otherUserName?.charAt(0) ?? "?"}
+            </AvatarFallback>
+          </Avatar>
           <h2 className="text-sm font-semibold text-foreground">{otherUserName}</h2>
-        </div>
+        </Link>
       </div>
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-thin min-h-0">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 scrollbar-thin min-h-0">
+        <div className="mx-auto max-w-3xl space-y-3">
         {isLoading &&
           [...Array(3)].map((_, i) => (
             <div key={i} className={`flex ${i % 2 === 0 ? "justify-start" : "justify-end"}`}>
@@ -127,6 +140,7 @@ export function ChatMain({ conversationId, otherUserName, otherUserAvatarUrl }: 
             </div>
           </div>
         ))}
+        </div>
       </div>
 
       <div className="p-4 border-t border-border flex items-center gap-3">

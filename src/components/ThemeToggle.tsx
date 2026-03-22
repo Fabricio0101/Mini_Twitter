@@ -38,11 +38,13 @@ export function ThemeToggle() {
   return (
     <Button
       ref={buttonRef}
+      data-tour="theme-toggle"
       variant="ghost"
       size="icon"
       onClick={handleToggle}
-      className={`size-10 rounded-full  hover:text-foreground ${mobile ? "text-foreground" : "text-muted-foreground"}`}
+      className={`size-10 rounded-full hover:text-foreground ${mobile ? "text-foreground" : "text-muted-foreground"}`}
       aria-label={theme === "dark" ? "Ativar modo claro" : "Ativar modo escuro"}
+      title={theme === "dark" ? "Modo claro" : "Modo escuro"}
     >
       {theme === "dark" ? (
         <Sun className={mobile ? "size-5" : "size-4"} />

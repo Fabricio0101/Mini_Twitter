@@ -123,7 +123,7 @@ export function PostForm() {
   };
 
   return (
-    <Card className="border border-border shadow-black/10 shadow-lg bg-card rounded-md p-0">
+    <Card data-tour="post-form" className="border border-border shadow-black/10 shadow-lg bg-card rounded-md p-0">
       <CardContent className="p-4">
         <form onSubmit={handleSubmit(onSubmit)}>
           <AnimatePresence initial={false}>
@@ -187,7 +187,6 @@ export function PostForm() {
                   <Input
                     placeholder="Qual o título do seu post?"
                     aria-invalid={!!errors.title}
-                    autoFocus
                     className="h-10 border-0 border-b border-border/40 rounded-none bg-transparent dark:bg-transparent px-0 text-sm text-foreground font-medium placeholder:text-muted-foreground/50 placeholder:font-normal focus-visible:ring-0 focus-visible:border-brand"
                     {...register("title")}
                   />
@@ -299,12 +298,13 @@ export function PostForm() {
               variant="ghost"
               size="icon"
               className="text-brand/60 hover:text-brand size-9"
+              title="Adicionar imagem"
               onClick={() => {
                 if (!isExpanded) setIsExpanded(true);
                 if (imagePreview) {
                   removeImage();
                 } else {
-                  setShowDropArea((v) => !v);
+                  fileInputRef.current?.click();
                 }
               }}
             >

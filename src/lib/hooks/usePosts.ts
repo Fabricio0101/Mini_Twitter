@@ -17,8 +17,19 @@ export function usePosts(search?: string) {
       if (search) params.search = search;
       const response = await api.get<PostsResponse>("/posts", { params });
 
-      // Seed the liked posts store from the API response
-      for (const post of response.data.posts) {
+      const normalizedPosts = response.data.posts.map((post) => ({
+        ...post,
+        likesCount: Number(post.likesCount),
+        commentsCount: Number(post.commentsCount),
+        likedByMe: Number(post.likedByMe),
+        repostsCount: Number(post.repostsCount),
+        repostedByMe: Number(post.repostedByMe),
+        favoritedByMe: Number(post.favoritedByMe),
+        viewsCount: Number(post.viewsCount),
+        isOwner: Boolean(post.isOwner),
+      }));
+
+      for (const post of normalizedPosts) {
         if (post.likedByMe) {
           addLike(post.id);
         } else {
@@ -26,7 +37,7 @@ export function usePosts(search?: string) {
         }
       }
 
-      return response.data;
+      return { ...response.data, posts: normalizedPosts };
     },
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {

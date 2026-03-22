@@ -20,6 +20,7 @@ export function CommentButton({ post }: CommentButtonProps) {
         size="sm"
         onClick={() => setOpen(true)}
         className="gap-1.5 px-2 h-8 text-muted-foreground hover:text-brand"
+        title="Comentários"
       >
         <MessageCircle className="size-4" />
         <span className="text-xs">{post.commentsCount}</span>

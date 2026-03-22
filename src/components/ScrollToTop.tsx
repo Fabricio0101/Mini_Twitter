@@ -30,7 +30,7 @@ export function ScrollToTop() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 10 }}
           transition={{ duration: 0.2 }}
-          className="fixed bottom-6 left-6 z-50"
+          className="fixed bottom-20 md:bottom-6 left-6 md:left-20 z-50"
         >
           <Button
             variant="outline"

@@ -27,6 +27,7 @@ export function LikeButton({ postId, likesCount }: LikeButtonProps) {
       size="sm"
       onClick={handleLike}
       disabled={!token || likeMutation.isPending}
+      title={isLiked ? "Descurtir" : "Curtir"}
       className="gap-1.5 px-2 h-8 text-muted-foreground hover:text-red-500"
     >
       <Heart

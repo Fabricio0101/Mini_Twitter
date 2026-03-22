@@ -3,6 +3,8 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { formatRelativeTime } from "@/lib/utils/formatRelativeTime";
@@ -27,7 +29,7 @@ export function ChatSidebar({ onSelectConversation, activeConversationId }: Chat
     : conversations;
 
   return (
-    <div className="flex w-80 flex-col border-r border-border p-4">
+    <div className="flex w-full md:w-80 flex-col border-r border-border p-4">
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-xl font-bold text-foreground">Chat</h1>
       </div>
@@ -61,14 +63,13 @@ export function ChatSidebar({ onSelectConversation, activeConversationId }: Chat
         )}
 
         {filtered.map((conv) => (
-          <button
+          <Button
             key={conv.id}
+            variant="ghost"
             onClick={() => onSelectConversation?.(conv.id)}
             className={cn(
-              "flex items-center gap-3 w-full p-3 rounded-lg transition-colors text-left cursor-pointer",
-              activeConversationId === conv.id
-                ? "bg-muted"
-                : "hover:bg-muted/50"
+              "flex items-center gap-3 w-full p-3 h-auto rounded-lg text-left",
+              activeConversationId === conv.id && "bg-muted"
             )}
           >
             <Avatar className="size-10 shrink-0">
@@ -87,17 +88,17 @@ export function ChatSidebar({ onSelectConversation, activeConversationId }: Chat
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <p className="text-xs text-muted-foreground truncate">
+                <p className="text-xs text-muted-foreground truncate font-normal">
                   {conv.lastMessage || "Sem mensagens"}
                 </p>
                 {conv.unreadCount > 0 && (
-                  <span className="ml-2 size-5 flex items-center justify-center rounded-full bg-brand text-[10px] font-bold text-brand-foreground shrink-0">
+                  <Badge className="ml-2 size-5 flex items-center justify-center rounded-full bg-brand text-[10px] font-bold text-brand-foreground shrink-0 p-0">
                     {conv.unreadCount}
-                  </span>
+                  </Badge>
                 )}
               </div>
             </div>
-          </button>
+          </Button>
         ))}
       </div>
     </div>

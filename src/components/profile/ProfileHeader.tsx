@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Mail, Calendar, MapPin, Camera, Loader2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useProfile, useUpdateProfile } from "@/lib/hooks/useProfile";
 import { useUploadImage } from "@/lib/hooks/useUpload";
 
@@ -32,7 +33,26 @@ export function ProfileHeader() {
   const uploadImage = useUploadImage();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  if (!user) return null;
+  if (!user) {
+    return (
+      <Card className="my-4">
+        <CardContent className="p-4 md:p-6">
+          <div className="flex flex-col items-start gap-4 md:gap-6 md:flex-row md:items-center">
+            <Skeleton className="size-20 md:size-24 rounded-full" />
+            <div className="flex-1 space-y-3 w-full">
+              <Skeleton className="h-6 w-48" />
+              <Skeleton className="h-4 w-64" />
+              <div className="flex flex-wrap gap-4">
+                <Skeleton className="h-4 w-36" />
+                <Skeleton className="h-4 w-28" />
+                <Skeleton className="h-4 w-40" />
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   const isUploading = uploadImage.isPending || updateProfile.isPending;
 
@@ -47,10 +67,10 @@ export function ProfileHeader() {
   };
 
   return (
-    <Card className="my-4">
+    <Card data-tour="profile-card" className="my-4">
       <CardContent className="p-4 md:p-6">
         <div className="flex flex-col items-start gap-4 md:gap-6 md:flex-row md:items-center">
-          <div className="relative">
+          <div data-tour="profile-avatar" className="relative">
             <Avatar className="size-20 md:size-24">
               {user.avatarUrl && <AvatarImage src={user.avatarUrl} alt={user.name} />}
               <AvatarFallback className="bg-brand/15 text-brand text-2xl font-semibold">
@@ -63,6 +83,7 @@ export function ProfileHeader() {
               className="absolute -right-2 -bottom-2 size-8 rounded-full"
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploading}
+              title="Alterar foto de perfil"
             >
               {isUploading ? (
                 <Loader2 className="size-3.5 animate-spin" />
@@ -78,7 +99,7 @@ export function ProfileHeader() {
               onChange={handleAvatarChange}
             />
           </div>
-          <div className="flex-1 space-y-2">
+          <div data-tour="profile-info" className="flex-1 space-y-2">
             <h1 className="text-xl md:text-2xl font-bold text-foreground">{user.name}</h1>
             {user.bio && (
               <p className="text-muted-foreground text-sm">{user.bio}</p>

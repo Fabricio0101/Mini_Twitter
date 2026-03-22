@@ -12,8 +12,10 @@ export function ChatProvider() {
 
   return (
     <>
-      {isTimeline && <ChatFloatingBar />}
-      {isTimeline && <ChatPopup />}
+      <div className="hidden md:block">
+        {isTimeline && <ChatFloatingBar />}
+        {isTimeline && <ChatPopup />}
+      </div>
     </>
   );
 }

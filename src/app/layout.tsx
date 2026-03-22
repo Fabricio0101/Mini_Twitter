@@ -13,6 +13,12 @@ export const metadata: Metadata = {
   title: "Mini Twitter",
   description:
     "Plataforma de microblogging. Crie, compartilhe e interaja com posts em tempo real.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+  },
 };
 
 export default function RootLayout({

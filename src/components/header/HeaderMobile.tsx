@@ -3,12 +3,25 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Menu, LogOut, User, Loader2 } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
+import {
+  Menu,
+  LogOut,
+  User,
+  Loader2,
+  Home,
+  MessageCircle,
+} from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { SearchCommand } from "@/components/SearchCommand";
+import { HelpMenu } from "@/components/tour/HelpMenu";
 import { useAuthStore } from "@/lib/store/authStore";
 import { useLogout } from "@/lib/hooks/useAuth";
 
@@ -21,6 +34,12 @@ function getInitials(name: string) {
     .toUpperCase();
 }
 
+const NAV_ITEMS = [
+  { href: "/", icon: Home, label: "Início" },
+  { href: "/profile", icon: User, label: "Meu Perfil" },
+  { href: "/chat", icon: MessageCircle, label: "Chat" },
+];
+
 export function HeaderMobile() {
   const user = useAuthStore((s) => s.user);
   const logoutMutation = useLogout();
@@ -30,7 +49,7 @@ export function HeaderMobile() {
   if (!user) return null;
 
   return (
-    <header className="flex md:hidden w-full z-50 border-b border-border">
+    <header className="flex md:hidden sticky top-0 w-full z-50 border-b border-border bg-background">
       <div className="flex w-full h-14 justify-between items-center px-4">
         <Link href="/">
           <p className="text-lg font-semibold text-brand dark:text-foreground">
@@ -39,6 +58,7 @@ export function HeaderMobile() {
         </Link>
         <div className="flex items-center gap-1">
           <SearchCommand />
+          <HelpMenu />
           <ThemeToggle />
           <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
             <SheetTrigger render={
@@ -62,17 +82,20 @@ export function HeaderMobile() {
                   </div>
                 </div>
                 <nav className="flex-1 p-4 space-y-1">
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start text-foreground gap-3 h-11"
-                    onClick={() => {
-                      router.push("/profile");
-                      setSheetOpen(false);
-                    }}
-                  >
-                    <User className="size-4" />
-                    Minha conta
-                  </Button>
+                  {NAV_ITEMS.map(({ href, icon: Icon, label }) => (
+                    <Button
+                      key={href}
+                      variant="ghost"
+                      className="w-full justify-start text-foreground gap-3 h-11"
+                      onClick={() => {
+                        router.push(href);
+                        setSheetOpen(false);
+                      }}
+                    >
+                      <Icon className="size-4" />
+                      {label}
+                    </Button>
+                  ))}
                 </nav>
                 <div className="p-4 border-t border-border">
                   <Button

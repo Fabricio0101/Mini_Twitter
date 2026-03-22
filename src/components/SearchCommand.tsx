@@ -48,6 +48,7 @@ export function SearchCommand({ trigger }: SearchCommandProps) {
         <div onClick={() => setOpen(true)}>{trigger}</div>
       ) : (
         <Button
+          data-tour="search"
           variant="ghost"
           size="icon"
           className="size-9"

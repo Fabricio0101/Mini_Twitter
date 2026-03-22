@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, Pencil } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useProfile, useUpdateProfile } from "@/lib/hooks/useProfile";
 import { maritalStatusOptions } from "@/lib/utils/profile";
 
@@ -45,7 +46,44 @@ export function PersonalInfoTab() {
     }
   }, [user, reset]);
 
-  if (isLoading || !user) return null;
+  if (isLoading || !user) {
+    return (
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div className="space-y-1.5">
+            <Skeleton className="h-5 w-40" />
+            <Skeleton className="h-4 w-56" />
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-12" />
+              <Skeleton className="h-10 w-full rounded-md" />
+            </div>
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-14" />
+              <Skeleton className="h-10 w-full rounded-md" />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-8" />
+            <Skeleton className="h-20 w-full rounded-md" />
+          </div>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-16" />
+              <Skeleton className="h-10 w-full rounded-md" />
+            </div>
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-10 w-full rounded-md" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   const onSubmit = (data: ProfileFormData) => {
     updateProfile.mutate(data, {

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { X, Maximize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useChatStore } from "@/lib/store/chatStore";
 import { ConversationList } from "./ConversationList";
 import { InlineChat } from "./InlineChat";
@@ -23,9 +24,9 @@ export function ChatPopup() {
         <div className="flex items-center gap-2">
           <h3 className="text-base font-semibold text-foreground">Mensagens</h3>
           {unreadTotal > 0 && (
-            <span className="flex items-center justify-center px-1.5 py-0.5 rounded-full bg-brand text-[11px] font-bold text-brand-foreground min-w-[20px]">
+            <Badge className="bg-brand text-brand-foreground text-[11px] font-bold px-1.5 py-0.5 min-w-[20px]">
               {unreadTotal}
-            </span>
+            </Badge>
           )}
         </div>
         <div className="flex items-center gap-1">

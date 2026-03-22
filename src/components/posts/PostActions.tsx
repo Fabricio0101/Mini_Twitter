@@ -37,6 +37,7 @@ export function PostActions({ post }: PostActionsProps) {
               size="icon"
               className="size-8 text-muted-foreground"
               aria-label="Ações do post"
+              title="Ações do post"
             />
           }
         >

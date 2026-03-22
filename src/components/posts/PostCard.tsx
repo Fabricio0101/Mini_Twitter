@@ -1,10 +1,14 @@
 "use client";
 
+import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { LikeButton } from "@/components/posts/LikeButton";
 import { CommentButton } from "@/components/posts/CommentButton";
+import { RepostButton } from "@/components/posts/RepostButton";
+import { FavoriteButton } from "@/components/posts/FavoriteButton";
 import { PostActions } from "@/components/posts/PostActions";
-import { useAuthStore } from "@/lib/store/authStore";
+import { Eye } from "lucide-react";
+import { useTrackView } from "@/lib/hooks/useTrackView";
 import type { Post } from "@/lib/types/post";
 
 function formatDate(dateString: string) {
@@ -25,17 +29,16 @@ interface PostCardProps {
 }
 
 export function PostCard({ post }: PostCardProps) {
-  const userId = useAuthStore((s) => s.user?.id);
-  const isOwner = userId === post.authorId;
+  useTrackView(post.id);
 
   return (
-    <Card className="border border-border shadow-black/10 shadow-lg bg-card rounded-md p-3 md:p-4">
+    <Card data-tour="post-card" className="border border-border shadow-black/10 shadow-lg bg-card rounded-md p-3 md:p-4">
       <CardContent className="p-0">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-1.5 text-sm flex-wrap">
-            <span className="font-medium text-post-heading">
+            <Link href={`/user/${post.authorId}`} className="font-medium text-post-heading hover:underline">
               {post.authorName}
-            </span>
+            </Link>
             <span className="text-xs text-muted-foreground">
               {getHandle(post.authorName)}
             </span>
@@ -44,7 +47,7 @@ export function PostCard({ post }: PostCardProps) {
               {formatDate(post.createdAt)}
             </span>
           </div>
-          {isOwner && <PostActions post={post} />}
+          {post.isOwner && <PostActions post={post} />}
         </div>
 
         <h3 className="mt-2 font-semibold leading-snug text-post-heading">
@@ -68,6 +71,12 @@ export function PostCard({ post }: PostCardProps) {
         <div className="mt-3 flex items-center gap-1">
           <LikeButton postId={post.id} likesCount={post.likesCount} />
           <CommentButton post={post} />
+          <RepostButton postId={post.id} repostsCount={post.repostsCount} repostedByMe={post.repostedByMe} />
+          <FavoriteButton postId={post.id} favoritedByMe={post.favoritedByMe} />
+          <div className="ml-auto flex items-center gap-1 text-xs text-muted-foreground" title="Visualizações">
+            <Eye className="size-3.5" />
+            <span>{post.viewsCount || 0}</span>
+          </div>
         </div>
       </CardContent>
     </Card>

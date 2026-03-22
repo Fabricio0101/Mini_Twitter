@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Search, UserPlus, Loader2 } from "lucide-react";
+import { Search, MessageSquarePlus, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
   Sheet,
@@ -54,10 +54,11 @@ export function UserSearchSheet() {
             size="icon"
             className="size-9 text-muted-foreground hover:text-foreground"
             aria-label="Buscar usuários para conversar"
+            title="Nova conversa"
           />
         }
       >
-        <UserPlus className="size-[18px]" />
+        <MessageSquarePlus className="size-[18px]" />
       </SheetTrigger>
       <SheetContent side="left" className="w-80 sm:w-96 p-0">
         <SheetHeader className="p-4 pb-2 border-b border-border">

@@ -9,6 +9,7 @@ import { useChatStore } from "@/lib/store/chatStore";
 import { useMessages, useSendMessage } from "@/lib/hooks/useChat";
 import { useAuthStore } from "@/lib/store/authStore";
 import type { Conversation } from "@/lib/types/chat";
+import Link from "next/link";
 
 interface InlineChatProps {
   conversation: Conversation;
@@ -33,10 +34,11 @@ export function InlineChat({ conversation, onBack }: InlineChatProps) {
     }
   }, [storeMessages]);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!message.trim()) return;
-    sendMessage(conversation.id, message.trim());
+    const content = message.trim();
     setMessage("");
+    await sendMessage(conversation.id, content);
   };
 
   return (
@@ -45,13 +47,18 @@ export function InlineChat({ conversation, onBack }: InlineChatProps) {
         <Button variant="ghost" size="icon" onClick={onBack} className="size-8">
           <ArrowLeft className="size-4" />
         </Button>
-        <Avatar className="size-7">
-          <AvatarImage src={conversation.otherUserAvatarUrl ?? undefined} />
-          <AvatarFallback className="text-[10px] bg-brand/10 text-brand">
-            {conversation.otherUserName.charAt(0)}
-          </AvatarFallback>
-        </Avatar>
-        <span className="text-sm font-medium truncate">{conversation.otherUserName}</span>
+        <Link
+          href={`/profile/${conversation.otherUserId}`}
+          className="flex items-center gap-2 flex-1 min-w-0 hover:opacity-80 transition-opacity"
+        >
+          <Avatar className="size-7">
+            <AvatarImage src={conversation.otherUserAvatarUrl ?? undefined} />
+            <AvatarFallback className="text-[10px] bg-brand/10 text-brand">
+              {conversation.otherUserName.charAt(0)}
+            </AvatarFallback>
+          </Avatar>
+          <span className="text-sm font-medium truncate text-foreground">{conversation.otherUserName}</span>
+        </Link>
       </div>
 
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-3 space-y-2 scrollbar-thin min-h-0">

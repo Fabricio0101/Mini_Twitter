@@ -140,6 +140,11 @@
   html {
     @apply font-sans;
   }
+  input:disabled,
+  textarea:disabled,
+  select:disabled {
+    @apply opacity-60 cursor-not-allowed;
+  }
 }
 
 .scrollbar-thin {

@@ -35,28 +35,21 @@ export function useMessages(conversationId: number | null) {
 }
 
 export function useSendMessage() {
-  const ws = useChatStore((s) => s.ws);
   const addMessage = useChatStore((s) => s.addMessage);
   const queryClient = useQueryClient();
 
   return useCallback(
     async (conversationId: number, content: string) => {
-      if (ws && ws.readyState === WebSocket.OPEN) {
-        ws.send(
-          JSON.stringify({
-            type: "send_message",
-            conversationId,
-            content,
-          })
-        );
-      } else {
+      try {
         const { data } = await api.post(`/conversations/${conversationId}/messages`, { content });
         addMessage(data);
         queryClient.invalidateQueries({ queryKey: ["messages", conversationId] });
+        queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      } catch {
+        queryClient.invalidateQueries({ queryKey: ["messages", conversationId] });
       }
-      queryClient.invalidateQueries({ queryKey: ["conversations"] });
     },
-    [ws, addMessage, queryClient]
+    [addMessage, queryClient]
   );
 }
 
@@ -94,8 +87,17 @@ export function useChatWebSocket() {
   useEffect(() => {
     if (!token) return;
 
-    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const wsUrl = `${protocol}//${window.location.host}/api/ws/chat?token=${token}`;
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
+    let wsUrl: string;
+
+    if (apiUrl) {
+      const url = new URL(apiUrl);
+      const wsProtocol = url.protocol === "https:" ? "wss:" : "ws:";
+      wsUrl = `${wsProtocol}//${url.host}/ws/chat?token=${token}`;
+    } else {
+      const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+      wsUrl = `${protocol}//${window.location.host}/api/ws/chat?token=${token}`;
+    }
 
     const connect = () => {
       const socket = new WebSocket(wsUrl);
@@ -112,8 +114,8 @@ export function useChatWebSocket() {
             addMessage(data.message);
             queryClient.invalidateQueries({ queryKey: ["conversations"] });
           }
-        } catch (e) {
-          // ignore
+        } catch {
+          
         }
       };
 
