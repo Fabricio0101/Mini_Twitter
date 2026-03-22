@@ -12,17 +12,45 @@ export function useComments(postId: number) {
   });
 }
 
+export function useReplies(commentId: number) {
+  return useQuery<Comment[]>({
+    queryKey: ["replies", commentId],
+    queryFn: async () => {
+      const { data } = await api.get(`/comments/${commentId}/replies`);
+      return data;
+    },
+    enabled: false, // Busca só quando "Ver respostas" é clicado
+  });
+}
+
 export function useCreateComment(postId: number) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (payload: CreateCommentPayload) => {
+    mutationFn: async (payload: CreateCommentPayload & { parentId?: number }) => {
       const { data } = await api.post(`/posts/${postId}/comments`, payload);
+      return data;
+    },
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["comments", postId] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      if (variables.parentId) {
+        queryClient.invalidateQueries({ queryKey: ["replies", variables.parentId] });
+      }
+    },
+  });
+}
+
+export function useToggleCommentLike(postId: number) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (commentId: number) => {
+      const { data } = await api.post(`/comments/${commentId}/like`);
       return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["comments", postId] });
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
   });
 }

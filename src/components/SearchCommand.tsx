@@ -59,6 +59,7 @@ export function SearchCommand({ trigger }: SearchCommandProps) {
       )}
       <CommandDialog
         open={open}
+        className="sm:max-w-xl"
         onOpenChange={(isOpen) => {
           setOpen(isOpen);
           if (!isOpen) setQuery("");
@@ -89,7 +90,7 @@ export function SearchCommand({ trigger }: SearchCommandProps) {
             <CommandEmpty>
               Nenhum post encontrado para &quot;{debouncedQuery}&quot;
             </CommandEmpty>
-          )	: (
+          ) : (
             <CommandGroup heading="Posts encontrados">
               {posts.map((post) => (
                 <CommandItem

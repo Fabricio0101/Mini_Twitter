@@ -32,6 +32,7 @@ const mockPost: Post = {
   authorAvatarUrl: null,
   likesCount: 5,
   likedByMe: 0,
+  commentsCount: 0,
 };
 
 describe("PostCard", () => {

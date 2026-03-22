@@ -19,9 +19,13 @@ export interface Comment {
   content: string;
   postId: number;
   userId: number;
+  parentId: number | null;
   createdAt: string;
   authorName: string;
   authorAvatarUrl: string | null;
+  likesCount: number;
+  likedByMe: boolean;
+  repliesCount: number;
 }
 
 export interface PostsResponse {

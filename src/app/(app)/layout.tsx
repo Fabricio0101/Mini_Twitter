@@ -1,6 +1,7 @@
 import React from "react";
 import { Header } from "@/components/header";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { ChatProvider } from "@/components/chat/ChatProvider";
 
 export default function AppLayout({
   children,
@@ -12,6 +13,7 @@ export default function AppLayout({
       <Header />
       <main className="flex-1">{children}</main>
       <ScrollToTop />
+      <ChatProvider />
     </div>
   );
 }
